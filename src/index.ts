@@ -1,6 +1,12 @@
 import { numberConverter } from "./converters/number";
 import { stringConverter } from "./converters/string";
-import { MapPair, MapDestinationOptions } from "./interfaces/converter";
+import { MapPair, MapDestinationOptions, MapPairOptions, ConvertMethod } from "./interfaces/converter";
+import { MapFieldType } from "./interfaces/field";
+
+interface MapPairNormalized extends Pick<MapPairOptions, "sourceField" | "destinationField"> {
+  type?: MapFieldType;
+  method?: ConvertMethod;
+}
 
 interface IConstructor<T> {
   new (...args: any[]): T;
@@ -14,29 +20,58 @@ export function mapClass<T extends IConstructor<T>>(sourceObject: any, destinati
   return destination;
 }
 
-function normalizePair(pair: MapPair | MapDestinationOptions): MapPair {
+function normalizePair(pair: MapPair | MapDestinationOptions): MapPairNormalized {
   if (Array.isArray(pair)) {
-    return pair;
+    const result: MapPairNormalized = {
+      sourceField: pair[0],
+      destinationField: pair[1],
+    };
+
+    const way = pair?.[2];
+    if (typeof way === "string") {
+      result.type = way;
+    } else if (typeof way === "function") {
+      result.method = way;
+    }
+
+    return result;
   } else {
-    return [pair.field, pair.field, pair.type];
+    const result: MapPairNormalized = {
+      sourceField: pair.field,
+      destinationField: pair.field,
+    };
+
+    const way = pair.convert;
+    if (typeof way === "string") {
+      result.type = way;
+    } else if (typeof way === "function") {
+      result.method = way;
+    }
+    return result;
   }
 }
 
 export function map<TSource extends object, TDestination extends object>(source: TSource, ...pairs: (MapPair | MapDestinationOptions)[]): TDestination {
   const destination = {};
 
-  const mapPairs: MapPair[] = pairs.map(x => normalizePair(x));
+  const mapPairs: MapPairNormalized[] = pairs.map(x => normalizePair(x));
 
   Object.keys(source).forEach(sourceKey => {
     let sourceValue = source[sourceKey];
-    const pair = mapPairs.find(x => x[0] === sourceKey);
-    const destinationKey = pair?.[1] || sourceKey;
-    const type = pair?.[2];
-    if (typeof type === "string") {
-      if (type === "number") {
-        sourceValue = numberConverter(sourceValue);
-      } else if (type === "string") {
-        sourceValue = stringConverter(sourceValue);
+    const pair = mapPairs.find(x => x.sourceField === sourceKey);
+    const destinationKey = pair?.destinationField || sourceKey;
+    if (pair) {
+      const type = pair.type;
+      if (type) {
+        if (type === "number") {
+          sourceValue = numberConverter(sourceValue);
+        } else if (type === "string") {
+          sourceValue = stringConverter(sourceValue);
+        }
+      }
+      const method = pair.method;
+      if (method) {
+        sourceValue = method(sourceValue);
       }
     }
 

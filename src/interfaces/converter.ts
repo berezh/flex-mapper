@@ -6,15 +6,18 @@ export interface MapConverter {
 
 // export type MapPair<TSource, TDestination> = [(source: TSource) => any, (destination: TDestination) => any];
 
-export type MapPair = [string, string, MapFieldType?];
+export type ConvertMethod = (sourceValue: any) => any;
+export type ConvertWay = MapFieldType | ConvertMethod;
+
+export type MapPair = [string, string, ConvertWay?];
 
 export interface MapDestinationOptions {
   field: string;
-  type: MapFieldType;
+  convert: ConvertWay;
 }
 
 export interface MapPairOptions {
   sourceField: string;
   destinationField: string;
-  type?: MapFieldType;
+  convert?: ConvertWay;
 }
