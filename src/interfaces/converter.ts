@@ -8,7 +8,13 @@ export interface MapConverter {
 
 export type MapPair = [string, string, MapFieldType?];
 
-export interface MapPairOptions {
+export interface MapDestinationOptions {
   field: string;
   type: MapFieldType;
+}
+
+export interface MapPairOptions {
+  sourceField: string;
+  destinationField: string;
+  type?: MapFieldType;
 }

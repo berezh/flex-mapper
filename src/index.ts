@@ -1,7 +1,6 @@
 import { numberConverter } from "./converters/number";
 import { stringConverter } from "./converters/string";
-import { MapPair, MapPairOptions } from "./interfaces/converter";
-import { MapFieldOptions } from "./interfaces/field";
+import { MapPair, MapDestinationOptions } from "./interfaces/converter";
 
 interface IConstructor<T> {
   new (...args: any[]): T;
@@ -15,18 +14,15 @@ export function mapClass<T extends IConstructor<T>>(sourceObject: any, destinati
   return destination;
 }
 
-function normalizePair(pair?: MapPair | MapPairOptions): MapPair | undefined {
-  if (pair) {
-    if (Array.isArray(pair)) {
-      return pair;
-    } else if (typeof pair === "object") {
-      return [pair.field, pair.field, pair.type];
-    }
+function normalizePair(pair: MapPair | MapDestinationOptions): MapPair {
+  if (Array.isArray(pair)) {
+    return pair;
+  } else {
+    return [pair.field, pair.field, pair.type];
   }
-  return undefined;
 }
 
-export function map<TSource extends object, TDestination extends object>(source: TSource, ...pairs: (MapPair | MapPairOptions)[]): TDestination {
+export function map<TSource extends object, TDestination extends object>(source: TSource, ...pairs: (MapPair | MapDestinationOptions)[]): TDestination {
   const destination = {};
 
   const mapPairs: MapPair[] = pairs.map(x => normalizePair(x));
