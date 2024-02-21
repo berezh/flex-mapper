@@ -15,8 +15,10 @@ describe("map", () => {
       field2: "hello",
       field3: true,
     };
-    const d = map(source, ["field2", "fieldKey2"]);
-    expect(d).toEqual({ field1: 1, fieldKey2: "hello", field3: true });
+    const dest = { field1: 1, fieldKey2: "hello", field3: true };
+
+    expect(map(source, ["field2", "fieldKey2"])).toEqual(dest);
+    expect(map(source, { sourceField: "field2", destinationField: "fieldKey2" })).toEqual(dest);
   });
 
   it("number type", () => {

@@ -1,6 +1,6 @@
 import { numberConverter } from "./converters/number";
 import { stringConverter } from "./converters/string";
-import { MapPair, MapDestinationOptions, MapPairOptions, ConvertMethod } from "./interfaces/converter";
+import { MapPair, MapDestinationOptions, MapPairOptions, ConvertMethod, ConvertWay } from "./interfaces/converter";
 import { MapFieldType } from "./interfaces/field";
 
 interface MapPairNormalized extends Pick<MapPairOptions, "sourceField" | "destinationField"> {
@@ -20,38 +20,50 @@ export function mapClass<T extends IConstructor<T>>(sourceObject: any, destinati
   return destination;
 }
 
-function normalizePair(pair: MapPair | MapDestinationOptions): MapPairNormalized {
+function initWay(item: MapPairNormalized, way?: ConvertWay) {
+  if (typeof way === "string") {
+    item.type = way;
+  } else if (typeof way === "function") {
+    item.method = way;
+  }
+}
+
+function normalizePair(pair: MapPair | MapDestinationOptions | MapPairOptions): MapPairNormalized {
   if (Array.isArray(pair)) {
     const result: MapPairNormalized = {
       sourceField: pair[0],
       destinationField: pair[1],
     };
 
-    const way = pair?.[2];
-    if (typeof way === "string") {
-      result.type = way;
-    } else if (typeof way === "function") {
-      result.method = way;
-    }
-
+    initWay(result, pair?.[2]);
     return result;
   } else {
-    const result: MapPairNormalized = {
-      sourceField: pair.field,
-      destinationField: pair.field,
-    };
+    const keys = Object.keys(pair);
+    if (keys.includes("field")) {
+      const p = pair as MapDestinationOptions;
 
-    const way = pair.convert;
-    if (typeof way === "string") {
-      result.type = way;
-    } else if (typeof way === "function") {
-      result.method = way;
+      const result: MapPairNormalized = {
+        sourceField: p.field,
+        destinationField: p.field,
+      };
+
+      initWay(result, pair.convert);
+      return result;
+    } else {
+      const p = pair as MapPairOptions;
+
+      const result: MapPairNormalized = {
+        sourceField: p.sourceField,
+        destinationField: p.destinationField,
+      };
+
+      initWay(result, pair.convert);
+      return result;
     }
-    return result;
   }
 }
 
-export function map<TSource extends object, TDestination extends object>(source: TSource, ...pairs: (MapPair | MapDestinationOptions)[]): TDestination {
+export function map<TSource extends object, TDestination extends object>(source: TSource, ...pairs: (MapPair | MapDestinationOptions | MapPairOptions)[]): TDestination {
   const destination = {};
 
   const mapPairs: MapPairNormalized[] = pairs.map(x => normalizePair(x));
