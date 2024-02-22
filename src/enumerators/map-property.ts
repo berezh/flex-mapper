@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { MapPropertyOptions } from "../interfaces/field";
+import { MapPropertyOptions } from "../interfaces/property";
 import { MetadataKeys } from "../constants";
 
 function mapProperty(options: MapPropertyOptions) {

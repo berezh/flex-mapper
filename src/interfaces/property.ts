@@ -1,7 +1,7 @@
-export type MapFieldType = "string" | "number";
+export type MapPropertyType = "string" | "number";
 
 export interface MapPropertyOptions {
   source?: string;
-  type?: MapFieldType;
+  type?: MapPropertyType;
   convertor?: (source: any) => any;
 }

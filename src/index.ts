@@ -2,10 +2,10 @@ import { MetadataKeys } from "./constants";
 import { numberConverter } from "./converters/number";
 import { stringConverter } from "./converters/string";
 import { MapPair, MapDestinationOptions, MapPairOptions, ConvertMethod, ConvertWay } from "./interfaces/converter";
-import { MapFieldType, MapPropertyOptions } from "./interfaces/field";
+import { MapPropertyType, MapPropertyOptions } from "./interfaces/property";
 
-interface MapPairNormalized extends Pick<MapPairOptions, "sourceField" | "destinationField"> {
-  type?: MapFieldType;
+interface MapPairNormalized extends Pick<MapPairOptions, "sourceProperty" | "destinationProperty"> {
+  type?: MapPropertyType;
   method?: ConvertMethod;
 }
 
@@ -32,8 +32,8 @@ function initWay(item: MapPairNormalized, way?: ConvertWay) {
 function normalizePair(pair: MapPair | MapDestinationOptions | MapPairOptions): MapPairNormalized {
   if (Array.isArray(pair)) {
     const result: MapPairNormalized = {
-      sourceField: pair[0],
-      destinationField: pair[1],
+      sourceProperty: pair[0],
+      destinationProperty: pair[1],
     };
 
     initWay(result, pair?.[2]);
@@ -44,8 +44,8 @@ function normalizePair(pair: MapPair | MapDestinationOptions | MapPairOptions): 
       const p = pair as MapDestinationOptions;
 
       const result: MapPairNormalized = {
-        sourceField: p.field,
-        destinationField: p.field,
+        sourceProperty: p.field,
+        destinationProperty: p.field,
       };
 
       initWay(result, pair.convert);
@@ -54,8 +54,8 @@ function normalizePair(pair: MapPair | MapDestinationOptions | MapPairOptions): 
       const p = pair as MapPairOptions;
 
       const result: MapPairNormalized = {
-        sourceField: p.sourceField,
-        destinationField: p.destinationField,
+        sourceProperty: p.sourceProperty,
+        destinationProperty: p.destinationProperty,
       };
 
       initWay(result, pair.convert);
@@ -71,8 +71,8 @@ export function map<TSource extends object, TDestination extends object>(source:
 
   Object.keys(source).forEach(sourceKey => {
     let sourceValue = source[sourceKey];
-    const pair = mapPairs.find(x => x.sourceField === sourceKey);
-    const destinationKey = pair?.destinationField || sourceKey;
+    const pair = mapPairs.find(x => x.sourceProperty === sourceKey);
+    const destinationKey = pair?.destinationProperty || sourceKey;
     if (pair) {
       const type = pair.type;
       if (type) {
@@ -101,8 +101,8 @@ export function mapProp<TSource extends object, TDestination extends object>(sou
   for (const key in metadata) {
     const options = metadata[key];
     pairs.push({
-      destinationField: key,
-      sourceField: options.source || key,
+      destinationProperty: key,
+      sourceProperty: options.source || key,
       convert: options.type || options.convertor,
     });
   }
