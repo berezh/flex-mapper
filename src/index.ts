@@ -1,7 +1,8 @@
+import { MetadataKeys } from "./constants";
 import { numberConverter } from "./converters/number";
 import { stringConverter } from "./converters/string";
 import { MapPair, MapDestinationOptions, MapPairOptions, ConvertMethod, ConvertWay } from "./interfaces/converter";
-import { MapFieldType } from "./interfaces/field";
+import { MapFieldType, MapPropertyOptions } from "./interfaces/field";
 
 interface MapPairNormalized extends Pick<MapPairOptions, "sourceField" | "destinationField"> {
   type?: MapFieldType;
@@ -91,4 +92,26 @@ export function map<TSource extends object, TDestination extends object>(source:
   });
 
   return destination as any;
+}
+
+export function mapProp<TSource extends object, TDestination extends object>(source: TSource, destination: TDestination): TDestination {
+  const metadata: { [propertyKey: string]: MapPropertyOptions } = Reflect.getMetadata(MetadataKeys.MapPropertyDictionary, destination);
+  const pairs: MapPairOptions[] = [];
+
+  for (const key in metadata) {
+    const options = metadata[key];
+    pairs.push({
+      destinationField: key,
+      sourceField: options.source || key,
+      convert: options.type || options.convertor,
+    });
+  }
+
+  const mapDestination = map(source, ...pairs);
+
+  for (const key in mapDestination) {
+    destination[key] = mapDestination[key];
+  }
+
+  return destination;
 }
