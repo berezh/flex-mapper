@@ -1,8 +1,8 @@
-import { mapProp } from "..";
+import { mapDest } from "..";
 import { mapProperty } from "../enumerators/map-property";
 
 function testMp<T extends object>(source: any, dest: T, result: T) {
-  expect(mapProp(source, dest)).toEqual(result);
+  expect(mapDest(source, dest)).toEqual(result);
 }
 
 describe("map.property", () => {

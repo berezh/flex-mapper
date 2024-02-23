@@ -9,18 +9,6 @@ interface MapPairNormalized extends Pick<MapPairOptions, "sourceProperty" | "des
   method?: ConvertMethod;
 }
 
-interface IConstructor<T> {
-  new (...args: any[]): T;
-
-  // Or enforce default constructor
-  // new (): T;
-}
-
-export function mapClass<T extends IConstructor<T>>(sourceObject: any, destinationClass: IConstructor<T>): T {
-  const destination = new destinationClass();
-  return destination;
-}
-
 function initWay(item: MapPairNormalized, way?: ConvertWay) {
   if (typeof way === "string") {
     item.type = way;
@@ -94,20 +82,24 @@ export function map<TSource extends object, TDestination extends object>(source:
   return destination as any;
 }
 
-export function mapProp<TSource extends object, TDestination extends object>(source: TSource, destination: TDestination): TDestination {
+export function mapDest<TSource extends object, TDestination extends object>(
+  source: TSource,
+  destination: TDestination,
+  ...pairs: (MapPair | MapDestinationOptions | MapPairOptions)[]
+): TDestination {
   const metadata: { [propertyKey: string]: MapPropertyOptions } = Reflect.getMetadata(MetadataKeys.MapPropertyDictionary, destination);
-  const pairs: MapPairOptions[] = [];
+  const mapPairs: MapPairOptions[] = [];
 
   for (const key in metadata) {
     const options = metadata[key];
-    pairs.push({
+    mapPairs.push({
       destinationProperty: key,
       sourceProperty: options.source || key,
       convert: options.type || options.convertor,
     });
   }
 
-  const mapDestination = map(source, ...pairs);
+  const mapDestination = map(source, ...[...mapPairs, ...pairs]);
 
   for (const key in mapDestination) {
     destination[key] = mapDestination[key];
