@@ -82,7 +82,7 @@ export function map<TSource extends object, TDestination extends object>(source:
   return destination as any;
 }
 
-export function mapDest<TSource extends object, TDestination extends object>(
+export function mapClass<TSource extends object, TDestination extends object>(
   source: TSource,
   destination: TDestination,
   ...pairs: (MapPair | MapDestinationOptions | MapPairOptions)[]
