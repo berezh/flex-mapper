@@ -9,7 +9,7 @@ export interface MapConverter {
 export type ConvertMethod = (sourceValue: any) => any;
 export type ConvertWay = MapPropertyType | ConvertMethod;
 
-export type MapPair = [string, string, ConvertWay?];
+export type MapPair = [string, ConvertWay, string?];
 
 export interface MapDestinationOptions {
   field: string;

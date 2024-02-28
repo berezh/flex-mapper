@@ -19,12 +19,14 @@ function initWay(item: MapPairNormalized, way?: ConvertWay) {
 
 function normalizePair(pair: MapPair | MapDestinationOptions | MapPairOptions): MapPairNormalized {
   if (Array.isArray(pair)) {
+    const sourceProp = pair[0];
+    const destProp = pair[2] || sourceProp;
     const result: MapPairNormalized = {
-      sourceProperty: pair[0],
-      destinationProperty: pair[1],
+      sourceProperty: sourceProp,
+      destinationProperty: destProp,
     };
 
-    initWay(result, pair?.[2]);
+    initWay(result, pair[1]);
     return result;
   } else {
     const keys = Object.keys(pair);

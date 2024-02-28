@@ -72,12 +72,56 @@ describe("map.property", () => {
     );
   });
 
+  it("types: number, string (as props)", () => {
+    class DestinationClass {
+      @mapProperty("number")
+      public id: number;
+
+      @mapProperty("string")
+      public code: string;
+    }
+
+    const dest = new DestinationClass();
+    dest.id = 1;
+    dest.code = "2";
+    testMp(
+      {
+        id: "1",
+        code: 2,
+      },
+      new DestinationClass(),
+      dest
+    );
+  });
+
   it("convert", () => {
     class DestinationClass {
       @mapProperty({ convertor: value => value + 1 })
       public id: number;
 
       @mapProperty({ convertor: value => value + "_name" })
+      public name: string;
+    }
+
+    const dest = new DestinationClass();
+    dest.id = 2;
+    dest.name = "foo_name";
+    testMp(
+      {
+        id: 1,
+        name: "foo",
+      },
+      new DestinationClass(),
+      dest
+    );
+  });
+
+  it("convert (as props)", () => {
+    class DestinationClass {
+      @mapProperty(value => value + 1)
+      public id: number;
+
+      @mapProperty(value => value + "_name")
       public name: string;
     }
 
