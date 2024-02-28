@@ -14,13 +14,11 @@ Installation:
 npm i type-mapper
 ```
 
-- [Options](#options)
-- [Philosophy](#philosophy)
-- [Base](#base)
-- [Primitive Strategies](#primitive-strategies)
-- [Complex Strategies](#complex-strategies)
+- [map() function](#map)
+- [mapClasses() function](#mapclasses)
+- [@mapProperty decorator](#mapproperty-decorator)
 
-## map()
+## map() function
 
 Maps objects
 
@@ -33,7 +31,7 @@ const cat = {
     color: "gray",
     years: 2
 }
-const result = map(cat, ["color", value=>value.toUpperCase()], ["years", value=> value * 12,  "months"]);
+const result = map(cat, ["color", value => value.toUpperCase()], ["years", value => value * 12,  "months"]);
 console.info(result);
 // {
 //     color: "GRAY",
@@ -41,19 +39,11 @@ console.info(result);
 // }
 ```
 
-## mapClasses() 
+## mapClasses() function
 
 Maps classes.
 
-Parameter is an interface with properties:
-
-| Name                     |  Type| Description|
-| ------------------------ | ------------------------ |--------- |
-|source| `string`||
-|type|`string`||
-|convert|`function`||
-
-Destination class definition. Mapping options are described with `@mapProperty` decorator.
+Destination class definition. Mapping options are described with [`@mapProperty` decorator](#mapproperty-decorator).
 
 ```ts
 import { mapProperty } from 'type-mapper';
@@ -61,11 +51,11 @@ import { mapProperty } from 'type-mapper';
 ...
 
 class CatClass {
-    @mapProperty(value=>value.toUpperCase())
+    @mapProperty(value => value.toUpperCase())
     color: string;
 
-    @mapProperty(value=> value * 12, "months")
-    years: number;
+    @mapProperty(value => value * 12, "years")
+    months: number;
 }
 
 ```
@@ -91,4 +81,14 @@ console.info(result);
 
 This is important to pass the classes object as a second parameter. In this way `mapClass` method reads decorators defined inside the class.
 
+## @mapProperty() decorator
 
+Describes how the property is to be mapped.
+
+Parameter is an interface with properties:
+
+| Name                     |  Type| Description|
+| ------------------------ | ---- |------------ |
+|source| `string`|Source property name|
+|convert|`function` or `string`| In `function` case, parameter is source value the function result is definition value. In `string` case, possible values are: `number`, `string`, `default`.
+ |

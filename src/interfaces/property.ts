@@ -1,7 +1,7 @@
-export type MapPropertyType = "default" | "string" | "number";
+import { MapConvertType } from "./converter";
 
 export interface MapPropertyOptions {
   source?: string;
-  type?: MapPropertyType;
+  type?: MapConvertType;
   convertor?: (source: any) => any;
 }

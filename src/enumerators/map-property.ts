@@ -1,10 +1,10 @@
 import "reflect-metadata";
 import { MapPropertyOptions } from "../interfaces/property";
 import { MetadataKeys } from "../constants";
-import { ConvertWay } from "../interfaces/converter";
+import { MapConvert } from "../interfaces/converter";
 
 function mapProperty(options: MapPropertyOptions);
-function mapProperty(way: ConvertWay, source?: string);
+function mapProperty(way: MapConvert, source?: string);
 function mapProperty(p1: unknown, p2?: unknown) {
   return function (target: object, propertyKey: string | symbol) {
     let options: MapPropertyOptions = {};

@@ -1,15 +1,15 @@
 import { MetadataKeys } from "./constants";
 import { numberConverter } from "./converters/number";
 import { stringConverter } from "./converters/string";
-import { MapPair, MapDestinationOptions, MapPairOptions, ConvertMethod, ConvertWay } from "./interfaces/converter";
-import { MapPropertyType, MapPropertyOptions } from "./interfaces/property";
+import { MapPair, MapDestinationOptions, MapPairOptions, MapConvertMethod, MapConvert, MapConvertType } from "./interfaces/converter";
+import { MapPropertyOptions } from "./interfaces/property";
 
 interface MapPairNormalized extends Pick<MapPairOptions, "sourceProperty" | "destinationProperty"> {
-  type?: MapPropertyType;
-  method?: ConvertMethod;
+  type?: MapConvertType;
+  method?: MapConvertMethod;
 }
 
-function initWay(item: MapPairNormalized, way?: ConvertWay) {
+function initWay(item: MapPairNormalized, way?: MapConvert) {
   if (typeof way === "string") {
     item.type = way;
   } else if (typeof way === "function") {

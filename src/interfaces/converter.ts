@@ -1,23 +1,22 @@
-import { MapPropertyType } from "./property";
+export type MapConvertType = "default" | "string" | "number";
+
+export type MapConvertMethod = (sourceValue: any) => any;
+
+export type MapConvert = MapConvertType | MapConvertMethod;
 
 export interface MapConverter {
   convert: (source: any, destination: any) => void;
 }
 
-// export type MapPair<TSource, TDestination> = [(source: TSource) => any, (destination: TDestination) => any];
-
-export type ConvertMethod = (sourceValue: any) => any;
-export type ConvertWay = MapPropertyType | ConvertMethod;
-
-export type MapPair = [string, ConvertWay, string?];
+export type MapPair = [string, MapConvert, string?];
 
 export interface MapDestinationOptions {
   field: string;
-  convert: ConvertWay;
+  convert: MapConvert;
 }
 
 export interface MapPairOptions {
   sourceProperty: string;
   destinationProperty: string;
-  convert?: ConvertWay;
+  convert?: MapConvert;
 }

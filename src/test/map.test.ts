@@ -1,5 +1,5 @@
 import { map } from "..";
-import { ConvertMethod } from "../interfaces/converter";
+import { MapConvertMethod } from "../interfaces/converter";
 
 describe("map", () => {
   it("simple", () => {
@@ -44,7 +44,7 @@ describe("map", () => {
       foo: 1,
     };
     const dest = { foo: 2 };
-    const convert: ConvertMethod = sourceValue => parseFloat(sourceValue) + 1;
+    const convert: MapConvertMethod = sourceValue => parseFloat(sourceValue) + 1;
     expect(map(source, ["foo", convert, "foo"])).toEqual(dest);
     expect(map(source, { field: "foo", convert })).toEqual(dest);
   });
@@ -54,7 +54,7 @@ describe("map", () => {
       foo: "first",
     };
     const dest = { foo: "first_second" };
-    const convert: ConvertMethod = sourceValue => `${sourceValue}_second`;
+    const convert: MapConvertMethod = sourceValue => `${sourceValue}_second`;
     expect(map(source, ["foo", convert, "foo"])).toEqual(dest);
     expect(map(source, { field: "foo", convert })).toEqual(dest);
   });
