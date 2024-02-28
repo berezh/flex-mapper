@@ -1,4 +1,5 @@
 import { mapClass } from "..";
+import { mapConvert } from "../enumerators/map-convert";
 import { mapProperty } from "../enumerators/map-property";
 
 function testMp<T extends object>(source: any, dest: T, result: T) {
@@ -50,12 +51,34 @@ describe("map.property", () => {
     );
   });
 
-  it("types: number, string", () => {
+  it("diff properties (as props)", () => {
     class DestinationClass {
-      @mapProperty({ type: "number" })
+      @mapProperty("code")
       public id: number;
 
-      @mapProperty({ type: "string" })
+      @mapProperty("firstName")
+      public name: string;
+    }
+
+    const dest = new DestinationClass();
+    dest.id = 1;
+    dest.name = "foo";
+    testMp(
+      {
+        code: 1,
+        firstName: "foo",
+      },
+      new DestinationClass(),
+      dest
+    );
+  });
+
+  it("types: number, string", () => {
+    class DestinationClass {
+      @mapProperty({ convert: "number" })
+      public id: number;
+
+      @mapProperty({ convert: "string" })
       public code: string;
     }
 
@@ -74,10 +97,10 @@ describe("map.property", () => {
 
   it("types: number, string (as props)", () => {
     class DestinationClass {
-      @mapProperty("number")
+      @mapConvert("number")
       public id: number;
 
-      @mapProperty("string")
+      @mapConvert("string")
       public code: string;
     }
 
@@ -96,10 +119,10 @@ describe("map.property", () => {
 
   it("convert", () => {
     class DestinationClass {
-      @mapProperty({ convertor: value => value + 1 })
+      @mapProperty({ convert: value => value + 1 })
       public id: number;
 
-      @mapProperty({ convertor: value => value + "_name" })
+      @mapProperty({ convert: value => value + "_name" })
       public name: string;
     }
 
@@ -118,10 +141,10 @@ describe("map.property", () => {
 
   it("convert (as props)", () => {
     class DestinationClass {
-      @mapProperty(value => value + 1)
+      @mapConvert(value => value + 1)
       public id: number;
 
-      @mapProperty(value => value + "_name")
+      @mapConvert(value => value + "_name")
       public name: string;
     }
 

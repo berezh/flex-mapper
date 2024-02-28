@@ -1,7 +1,6 @@
-import { MapConvertType } from "./converter";
+import { MapConvert } from "./converter";
 
-export interface MapPropertyOptions {
+export interface MapPropertyOption {
   source?: string;
-  type?: MapConvertType;
-  convertor?: (source: any) => any;
+  convert?: MapConvert;
 }

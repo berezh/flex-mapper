@@ -17,6 +17,7 @@ npm i type-mapper
 - [map() function](#map)
 - [mapClasses() function](#mapclasses)
 - [@mapProperty decorator](#mapproperty-decorator)
+- [@mapConvert decorator](#mapconvert-decorator)
 
 ## map() function
 
@@ -43,18 +44,18 @@ console.info(result);
 
 Maps classes.
 
-Destination class definition. Mapping options are described with [`@mapProperty` decorator](#mapproperty-decorator).
+Destination class definition. Mapping options are described with decorators: [`@mapProperty`](#mapproperty-decorator) and [`@mapConvert`](#mapconvert-decorator).
 
 ```ts
-import { mapProperty } from 'type-mapper';
+import { mapProperty, mapConvert } from 'type-mapper';
 
 ...
 
 class CatClass {
-    @mapProperty(value => value.toUpperCase())
+    @mapConvert(value => value.toUpperCase())
     color: string;
 
-    @mapProperty(value => value * 12, "years")
+    @mapProperty("years", value => value * 12)
     months: number;
 }
 
@@ -92,3 +93,7 @@ Parameter is an interface with properties:
 |source| `string`|Source property name|
 |convert|`function` or `string`| In `function` case, parameter is source value the function result is definition value. In `string` case, possible values are: `number`, `string`, `default`.
  |
+
+## @mapConvert() decorator
+
+Has one `function` or `string` parameter for converting.
