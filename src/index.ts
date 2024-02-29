@@ -6,14 +6,14 @@ import { MapPropertyOption } from "./interfaces/property";
 
 interface MapPairNormalized extends Pick<MapPairOptions, "sourceProperty" | "destinationProperty"> {
   type?: MapConvertType;
-  method?: MapConvertMethod;
+  convert?: MapConvertMethod;
 }
 
 function initWay(item: MapPairNormalized, way?: MapConvert) {
   if (typeof way === "string") {
     item.type = way;
   } else if (typeof way === "function") {
-    item.method = way;
+    item.convert = way;
   }
 }
 
@@ -58,8 +58,9 @@ export function map<TSource extends object, TDestination extends object>(source:
   const destination = {};
 
   const mapPairs: MapPairNormalized[] = pairs.map(x => normalizePair(x));
+  const keys = Object.keys(source);
 
-  Object.keys(source).forEach(sourceKey => {
+  keys.forEach(sourceKey => {
     let sourceValue = source[sourceKey];
     const pair = mapPairs.find(x => x.sourceProperty === sourceKey);
     const destinationKey = pair?.destinationProperty || sourceKey;
@@ -72,13 +73,17 @@ export function map<TSource extends object, TDestination extends object>(source:
           sourceValue = stringConverter(sourceValue);
         }
       }
-      const method = pair.method;
+      const method = pair.convert;
       if (method) {
         sourceValue = method(sourceValue);
       }
     }
 
-    destination[destinationKey] = sourceValue;
+    if (typeof sourceValue === "object") {
+      destination[destinationKey] = map(sourceValue);
+    } else {
+      destination[destinationKey] = sourceValue;
+    }
   });
 
   return destination as any;

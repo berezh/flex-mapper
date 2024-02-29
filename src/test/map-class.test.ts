@@ -6,7 +6,7 @@ function testMp<T extends object>(source: any, dest: T, result: T) {
   expect(mapClass(source, dest)).toEqual(result);
 }
 
-describe("map.property", () => {
+describe("mapClass", () => {
   it("simple", () => {
     class DestinationClass {
       @mapProperty({})
