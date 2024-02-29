@@ -22,8 +22,8 @@ function normalizePair(pair: MapPair | MapDestinationOptions | MapPairOptions): 
     const sourceProp = pair[0];
     const destProp = pair[2] || sourceProp;
     const result: MapPairNormalized = {
-      sourceProperty: sourceProp,
-      destinationProperty: destProp,
+      source: sourceProp,
+      destination: destProp,
     };
 
     initWay(result, pair[1]);
@@ -34,8 +34,8 @@ function normalizePair(pair: MapPair | MapDestinationOptions | MapPairOptions): 
       const p = pair as MapDestinationOptions;
 
       const result: MapPairNormalized = {
-        sourceProperty: p.field,
-        destinationProperty: p.field,
+        source: p.destination,
+        destination: p.destination,
       };
 
       initWay(result, pair.convert);
@@ -44,8 +44,8 @@ function normalizePair(pair: MapPair | MapDestinationOptions | MapPairOptions): 
       const p = pair as MapPairOptions;
 
       const result: MapPairNormalized = {
-        sourceProperty: p.sourceProperty,
-        destinationProperty: p.destinationProperty,
+        source: p.source,
+        destination: p.destination,
       };
 
       initWay(result, pair.convert);
@@ -62,8 +62,8 @@ export function map<TSource extends object, TDestination extends object>(source:
 
   keys.forEach(sourceKey => {
     let sourceValue = source[sourceKey];
-    const pair = mapPairs.find(x => x.sourceProperty === sourceKey);
-    const destinationKey = pair?.destinationProperty || sourceKey;
+    const pair = mapPairs.find(x => x.source === sourceKey);
+    const destinationKey = pair?.destination || sourceKey;
     if (pair) {
       const type = pair.type;
       if (type) {
@@ -100,8 +100,8 @@ export function mapClass<TSource extends object, TDestination extends object>(
   for (const key in metadata) {
     const options = metadata[key];
     mapPairs.push({
-      destinationProperty: key,
-      sourceProperty: options.source || key,
+      destination: key,
+      source: options.source || key,
       convert: options.convert,
     });
   }

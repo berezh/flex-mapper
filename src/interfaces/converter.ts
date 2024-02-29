@@ -11,12 +11,12 @@ export interface MapConverter {
 export type MapPair = [string, MapConvert, string?];
 
 export interface MapDestinationOptions {
-  field: string;
+  destination: string;
   convert: MapConvert;
 }
 
 export interface MapPairOptions {
-  sourceProperty: string;
-  destinationProperty: string;
+  source: string;
+  destination: string;
   convert?: MapConvert;
 }
