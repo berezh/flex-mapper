@@ -1,5 +1,5 @@
 import { map } from "..";
-import { MapConvertMethod } from "../interfaces/converter";
+import { MapConvertMethod } from "../interfaces";
 
 describe("map", () => {
   it("simple", () => {

@@ -1,14 +1,15 @@
 import { mapClass } from "..";
-import { mapConvert } from "../enumerators/map-convert";
 import { mapProperty } from "../enumerators/map-property";
 
 function testMp<T extends object>(source: any, dest: T, result: T) {
-  expect(mapClass(source, dest)).toEqual(result);
+  const mapResult = mapClass(source, dest);
+  // console.log("result", mapResult);
+  expect(mapResult).toEqual(result);
 }
 
 describe("mapClass", () => {
   it("simple", () => {
-    class DestinationClass {
+    class TebotClass {
       @mapProperty({})
       public id: number;
 
@@ -16,7 +17,7 @@ describe("mapClass", () => {
       public name: string;
     }
 
-    const dest = new DestinationClass();
+    const dest = new TebotClass();
     dest.id = 1;
     dest.name = "foo";
     testMp(
@@ -24,34 +25,12 @@ describe("mapClass", () => {
         id: 1,
         name: "foo",
       },
-      new DestinationClass(),
+      new TebotClass(),
       dest
     );
   });
 
-  it("diff properties", () => {
-    class DestinationClass {
-      @mapProperty({ source: "code" })
-      public id: number;
-
-      @mapProperty({ source: "firstName" })
-      public name: string;
-    }
-
-    const dest = new DestinationClass();
-    dest.id = 1;
-    dest.name = "foo";
-    testMp(
-      {
-        code: 1,
-        firstName: "foo",
-      },
-      new DestinationClass(),
-      dest
-    );
-  });
-
-  it("diff properties (as props)", () => {
+  it("convert property", () => {
     class DestinationClass {
       @mapProperty("code")
       public id: number;
@@ -75,32 +54,10 @@ describe("mapClass", () => {
 
   it("types: number, string", () => {
     class DestinationClass {
-      @mapProperty({ convert: "number" })
+      @mapProperty(["number"])
       public id: number;
 
-      @mapProperty({ convert: "string" })
-      public code: string;
-    }
-
-    const dest = new DestinationClass();
-    dest.id = 1;
-    dest.code = "2";
-    testMp(
-      {
-        id: "1",
-        code: 2,
-      },
-      new DestinationClass(),
-      dest
-    );
-  });
-
-  it("types: number, string (as props)", () => {
-    class DestinationClass {
-      @mapConvert("number")
-      public id: number;
-
-      @mapConvert("string")
+      @mapProperty(["string"])
       public code: string;
     }
 
@@ -119,32 +76,10 @@ describe("mapClass", () => {
 
   it("convert", () => {
     class DestinationClass {
-      @mapProperty({ convert: value => value + 1 })
+      @mapProperty(value => value + 1)
       public id: number;
 
-      @mapProperty({ convert: value => value + "_name" })
-      public name: string;
-    }
-
-    const dest = new DestinationClass();
-    dest.id = 2;
-    dest.name = "foo_name";
-    testMp(
-      {
-        id: 1,
-        name: "foo",
-      },
-      new DestinationClass(),
-      dest
-    );
-  });
-
-  it("convert (as props)", () => {
-    class DestinationClass {
-      @mapConvert(value => value + 1)
-      public id: number;
-
-      @mapConvert(value => value + "_name")
+      @mapProperty(value => value + "_name")
       public name: string;
     }
 

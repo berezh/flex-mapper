@@ -1,6 +1,6 @@
 import "reflect-metadata";
 
-import { MapConvert } from "../interfaces/converter";
+import { MapConvert } from "../interfaces";
 import { mapProperty } from "./map-property";
 
 function mapConvert(convert: MapConvert) {
