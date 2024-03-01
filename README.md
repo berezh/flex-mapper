@@ -1,7 +1,7 @@
-# type-mapper
+# flex-mapper
 
-<a href="https://www.npmjs.com/package/type-mapperquery-pack">
-    <img src="https://nodei.co/npm/type-mapper.png?mini=true">
+<a href="https://www.npmjs.com/package/flex-mapperquery-pack">
+    <img src="https://nodei.co/npm/flex-mapper.png?mini=true">
 </a>
 
 TypeScript library for mapping objects and classes.
@@ -11,7 +11,7 @@ TypeScript library for mapping objects and classes.
 Installation:
 
 ```js
-npm i type-mapper
+npm i flex-mapper
 ```
 
 - [map() function](#map)
@@ -24,7 +24,7 @@ npm i type-mapper
 Maps objects
 
 ```ts
-import { map } from 'type-mapper';
+import { map } from 'flex-mapper';
 
 ...
 
@@ -53,7 +53,7 @@ Maps classes.
 Destination class definition. Mapping options are described with decorators: [`@mapProperty`](#mapproperty-decorator) and [`@mapConvert`](#mapconvert-decorator).
 
 ```ts
-import { mapProperty, mapConvert } from 'type-mapper';
+import { mapProperty, mapConvert } from 'flex-mapper';
 
 ...
 
@@ -73,7 +73,7 @@ class CatClass {
 Mapping class object:
 
 ```ts
-import { mapClass } from 'type-mapper';
+import { mapClass } from 'flex-mapper';
 
 ...
 
