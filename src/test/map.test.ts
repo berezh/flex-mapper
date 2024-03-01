@@ -3,31 +3,28 @@ import { MapConvertMethod } from "../interfaces/converter";
 
 describe("map", () => {
   it("simple", () => {
-    const source = {
-      field1: 1,
-      field2: "hello",
+    const tebot = {
+      id: 1,
+      name: "alfa",
     };
-    expect(map(source)).toEqual(source);
+    expect(map(tebot)).toEqual(tebot);
   });
   it("diff fields", () => {
-    const source = {
-      field1: 1,
-      field2: "hello",
-      field3: true,
+    const tebot = {
+      id: 1,
+      name: "alfa",
+      toggle: true,
     };
-    const dest = { field1: 1, fieldKey2: "hello", field3: true };
-
-    expect(map(source, ["field2", "default", "fieldKey2"])).toEqual(dest);
-    expect(map(source, { source: "field2", destination: "fieldKey2" })).toEqual(dest);
+    const dest = { id: 1, nickname: "alfa", toggle: true };
+    expect(map(tebot, { name: "nickname" })).toEqual(dest);
   });
 
   it("number type", () => {
-    const source = {
-      foo: "123",
+    const tebot = {
+      id: "123",
     };
-    const dest = { foo: 123 };
-    expect(map(source, ["foo", "number", "foo"])).toEqual(dest);
-    expect(map(source, { destination: "foo", convert: "number" })).toEqual(dest);
+    const dest = { id: 123 };
+    expect(map(tebot, { id: ["number"] })).toEqual(dest);
   });
 
   it("string type", () => {
@@ -35,8 +32,7 @@ describe("map", () => {
       foo: 123,
     };
     const dest = { foo: "123" };
-    expect(map(source, ["foo", "string", "foo"])).toEqual(dest);
-    expect(map(source, { destination: "foo", convert: "string" })).toEqual(dest);
+    expect(map(source, { foo: ["string"] })).toEqual(dest);
   });
 
   it("converter number", () => {
@@ -45,8 +41,7 @@ describe("map", () => {
     };
     const dest = { foo: 2 };
     const convert: MapConvertMethod = sourceValue => parseFloat(sourceValue) + 1;
-    expect(map(source, ["foo", convert, "foo"])).toEqual(dest);
-    expect(map(source, { destination: "foo", convert })).toEqual(dest);
+    expect(map(source, { foo: convert })).toEqual(dest);
   });
 
   it("converter string", () => {
@@ -55,7 +50,6 @@ describe("map", () => {
     };
     const dest = { foo: "first_second" };
     const convert: MapConvertMethod = sourceValue => `${sourceValue}_second`;
-    expect(map(source, ["foo", convert, "foo"])).toEqual(dest);
-    expect(map(source, { destination: "foo", convert })).toEqual(dest);
+    expect(map(source, { foo: convert })).toEqual(dest);
   });
 });

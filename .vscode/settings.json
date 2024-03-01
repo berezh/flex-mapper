@@ -5,5 +5,15 @@
   "editor.codeActionsOnSave": {      
     "source.fixAll.eslint": "always"
   },
-  "eslint.validate": ["typescript", "typescriptreact", "javascript", "javascriptreact", "markdown", "json"],
+  "eslint.validate": [
+    "typescript",
+    "typescriptreact",
+    "javascript",
+    "javascriptreact",
+    "markdown",
+    "json"
+  ],
+  "cSpell.words": [
+    "tebot"
+  ],
 }

@@ -20,3 +20,7 @@ export interface MapPairOptions {
   destination: string;
   convert?: MapConvert;
 }
+
+export interface MapConfig {
+  [source: string]: MapConfig | string | MapConvertMethod | [MapConvert, string?];
+}
