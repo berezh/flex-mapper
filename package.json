@@ -1,6 +1,6 @@
 {
   "name": "flex-mapper",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -11,12 +11,12 @@
     "lint:fix": "eslint . --fix"
   },
   "repository": {
-    "type": "git"
+    "type": "git",
+    "url": "git+https://github.com/berezh/flex-mappers.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {},
-  "homepage": "https://varp.com",
   "devDependencies": {
     "@types/jest": "^24.9.1",
     "eslint-config-varp-common": "^1.0.0",
@@ -27,5 +27,8 @@
   },
   "dependencies": {
     "reflect-metadata": "^0.2.1"
-  }
+  },
+  "keywords": [
+    "mapper", "map", "mapping", "typescript mapper", "javascript mapper", "object mapper"
+  ]
 }
