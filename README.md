@@ -1,6 +1,6 @@
 # flex-mapper
 
-<a href="https://www.npmjs.com/package/flex-mapperquery-pack">
+<a href="https://www.npmjs.com/package/flex-mapper">
     <img src="https://nodei.co/npm/flex-mapper.png?mini=true">
 </a>
 
