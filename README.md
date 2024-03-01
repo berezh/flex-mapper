@@ -14,13 +14,13 @@ Installation:
 npm i flex-mapper
 ```
 
-- [map() function](#map-function)
-- [mapClass() function](#mapclass-function)
-- [@mapProperty decorator](#mapproperty-decorator)
-- [@mapConvert decorator](#mapconvert-decorator)
+- [`map` function](#map-function)
+- [`mapClass` function](#mapclass-function)
+- [`mapProperty` decorator](#mapproperty-decorator)
+- [`mapConvert` decorator](#mapconvert-decorator)
 
 
-## map() function
+## `map` function
 
 Maps objects
 
@@ -47,7 +47,7 @@ console.info(result);
 // }
 ```
 
-## mapClass() function
+## `mapClass` function
 
 Maps classes.
 
@@ -94,7 +94,7 @@ console.info(result);
 
 This is important to pass the classes object as a second parameter. In this way `mapClass` method reads decorators defined inside the class.
 
-## @mapProperty decorator
+## `mapProperty` decorator
 
 Describes how the property is to be mapped.
 
@@ -105,6 +105,6 @@ Parameter is an interface with properties:
 |source| `string`|Source property name|
 |convert|`function` or `string`| In `function` case, parameter is source value the function result is definition value. In `string` case, possible values are: `number`, `string`.|
 
-## @mapConvert decorator
+## `mapConvert` decorator
 
 Has one `function` or `string` parameter for converting.
