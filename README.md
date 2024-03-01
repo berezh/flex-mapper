@@ -29,12 +29,18 @@ import { map } from 'type-mapper';
 ...
 
 const cat = {
+    name: "Tom",
     color: "gray",
     years: 2
 }
-const result = map(cat, ["color", value => value.toUpperCase()], ["years", value => value * 12,  "months"]);
+const result = map(cat, {
+    name: 'nickname',
+    color: value => value.toUpperCase(),
+    years: [value => value * 12, "months"]
+});
 console.info(result);
 // {
+//     nickname: "Tom",
 //     color: "GRAY",
 //     months: 24
 // }
@@ -52,6 +58,9 @@ import { mapProperty, mapConvert } from 'type-mapper';
 ...
 
 class CatClass {
+    @mapProperty("name")
+    nickname: number;
+
     @mapConvert(value => value.toUpperCase())
     color: string;
 
@@ -69,12 +78,14 @@ import { mapClass } from 'type-mapper';
 ...
 
 const cat = {
+    name: "Tom",
     color: "gray",
     years: 2
 }
 const result = mapClass(cat, new CatClass());
 console.info(result);
 // {
+//     nickname: "Tom",
 //     color: "GRAY",
 //     months: 24
 // }
@@ -91,7 +102,7 @@ Parameter is an interface with properties:
 | Name                     |  Type| Description|
 | ------------------------ | ---- |------------ |
 |source| `string`|Source property name|
-|convert|`function` or `string`| In `function` case, parameter is source value the function result is definition value. In `string` case, possible values are: `number`, `string`, `default`.
+|convert|`function` or `string`| In `function` case, parameter is source value the function result is definition value. In `string` case, possible values are: `number`, `string`.
  |
 
 ## @mapConvert() decorator
