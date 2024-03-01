@@ -32,6 +32,19 @@ describe("map children", () => {
   });
 
   describe("array", () => {
+    it("of numbers", () => {
+      const tebot = {
+        name: "Tom",
+        children: [1, 2, 3],
+      };
+
+      expect(
+        map(tebot, {
+          children: x => x.toString(),
+        })
+      ).toMatchObject({ ...tebot, children: "1,2,3" });
+    });
+
     it("of objects", () => {
       interface TeBot {
         name: string;

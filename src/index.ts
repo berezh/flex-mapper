@@ -59,16 +59,20 @@ function convertObject<TDestination extends object>(
   destinationInfos: DestinationInfo[] | undefined,
   convertChild: ConvertChildObject
 ): TDestination {
-  const keys = Object.keys(source);
+  if (source !== null) {
+    const keys = Object.keys(source);
 
-  keys.forEach(sourceKey => {
-    const destInfo = (destinationInfos || []).find(x => x.source === sourceKey);
-    const destValue = convertProperty(sourceKey, source[sourceKey], destInfo, convertChild);
-    const destinationKey = destInfo?.destination || sourceKey;
-    destination[destinationKey] = destValue;
-  });
+    keys.forEach(sourceKey => {
+      const destInfo = (destinationInfos || []).find(x => x.source === sourceKey);
+      const destValue = convertProperty(sourceKey, source[sourceKey], destInfo, convertChild);
+      const destinationKey = destInfo?.destination || sourceKey;
+      destination[destinationKey] = destValue;
+    });
 
-  return destination;
+    return destination;
+  }
+
+  return source;
 }
 
 function innerMap<TSource extends object, TDestination extends object>(source: TSource, destinationInfos?: DestinationInfo[]): TDestination {
@@ -77,8 +81,12 @@ function innerMap<TSource extends object, TDestination extends object>(source: T
 }
 
 export function map<TSource extends object, TDestination extends object>(source: TSource, config?: MapConfig): TDestination {
-  const configInfos: DestinationInfo[] = parseConfig(config || {});
-  return innerMap(source, configInfos);
+  if (typeof source === "object" && source !== null) {
+    const configInfos: DestinationInfo[] = parseConfig(config || {});
+    return innerMap(source, configInfos);
+  }
+
+  return source;
 }
 
 function getMetaDestinationInfos(destination: object): DestinationInfo[] {

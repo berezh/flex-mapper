@@ -1,14 +1,51 @@
 import { map } from "..";
-import { MapConvertMethod } from "../interfaces";
+import { MapConfig, MapConvertMethod } from "../interfaces";
+
+function testMap<T extends object>(source: T, result: any) {
+  testMapConfig(source, undefined, result);
+}
+
+function testMapConfig<T extends object>(source: T, config: MapConfig | undefined, result: any) {
+  const mapResult = map(source, config);
+  expect(mapResult).toEqual(result);
+}
 
 describe("map", () => {
-  it("simple", () => {
-    const tebot = {
-      id: 1,
-      name: "alfa",
-    };
-    expect(map(tebot)).toEqual(tebot);
+  describe("simple", () => {
+    it("no config", () => {
+      const tebot = {
+        id: 1,
+        name: "alfa",
+      };
+      expect(map(tebot)).toEqual(tebot);
+    });
+
+    it("elemental empties", () => {
+      testMap(null as any, null);
+      testMap(undefined as any, undefined);
+      testMap(NaN as any, NaN);
+    });
+
+    it("elemental values", () => {
+      testMap(1 as any, 1);
+      testMap("hello" as any, "hello");
+      testMap(true as any, true);
+    });
+
+    it("properties empties", () => {
+      function testPropertyValue(value: any) {
+        const tebot = {
+          foo: value,
+        };
+        testMap(tebot, tebot);
+      }
+
+      testPropertyValue(null);
+      testPropertyValue(undefined);
+      testPropertyValue(NaN);
+    });
   });
+
   it("diff fields", () => {
     const tebot = {
       id: 1,
