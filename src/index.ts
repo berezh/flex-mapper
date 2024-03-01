@@ -26,8 +26,8 @@ function parseConfig(config: MapConfig): DestinationInfo[] {
   return Object.keys(config).map(key => parseSourceConfig(key, config[key]));
 }
 
-function convertDestinationValue(sourceValue: unknown, destinationInfo?: DestinationInfo): unknown {
-  let destinationValue = sourceValue;
+function convertProperty(name: string, value: unknown, destinationInfo: DestinationInfo | undefined, convertChild: ConvertChildObject): unknown {
+  let destinationValue = value;
   if (destinationInfo) {
     const convert = destinationInfo.convert;
     if (typeof convert === "string") {
@@ -42,35 +42,38 @@ function convertDestinationValue(sourceValue: unknown, destinationInfo?: Destina
     }
   }
 
+  if (Array.isArray(destinationValue)) {
+    destinationValue = destinationValue.map(x => convertProperty("", x, destinationInfo, convertChild));
+  } else if (typeof destinationValue === "object") {
+    destinationValue = convertChild(name, destinationValue as object, destinationInfo?.children || []);
+  }
+
   return destinationValue;
 }
 
-function convertDestinationObject<TDestination extends object>(
+type ConvertChildObject = (name: string, value: object, infos: DestinationInfo[]) => object;
+
+function convertObject<TDestination extends object>(
   source: object,
   destination: TDestination,
-  destinationInfos: DestinationInfo[],
-  convertChild: (name: string, value: object, infos: DestinationInfo[]) => object
+  destinationInfos: DestinationInfo[] | undefined,
+  convertChild: ConvertChildObject
 ): TDestination {
   const keys = Object.keys(source);
 
   keys.forEach(sourceKey => {
-    const destInfo = destinationInfos.find(x => x.source === sourceKey);
-    const destValue = convertDestinationValue(source[sourceKey], destInfo);
+    const destInfo = (destinationInfos || []).find(x => x.source === sourceKey);
+    const destValue = convertProperty(sourceKey, source[sourceKey], destInfo, convertChild);
     const destinationKey = destInfo?.destination || sourceKey;
-
-    if (typeof destValue === "object") {
-      destination[destinationKey] = convertChild(destinationKey, destValue as object, destInfo?.children || []);
-    } else {
-      destination[destinationKey] = destValue;
-    }
+    destination[destinationKey] = destValue;
   });
 
   return destination;
 }
 
-function innerMap<TSource extends object, TDestination extends object>(source: TSource, destinationInfos: DestinationInfo[]): TDestination {
+function innerMap<TSource extends object, TDestination extends object>(source: TSource, destinationInfos?: DestinationInfo[]): TDestination {
   const destinationObject = {};
-  return convertDestinationObject(source, destinationObject, destinationInfos, (n, v, dis) => innerMap(v, dis)) as any;
+  return convertObject(source, destinationObject, destinationInfos, (n, v, dis) => innerMap(v, dis)) as any;
 }
 
 export function map<TSource extends object, TDestination extends object>(source: TSource, config?: MapConfig): TDestination {
@@ -88,7 +91,7 @@ function innerMapClass<TSource extends object, TDestination extends object>(sour
   const configSourceKeys = configInfos.map(x => x.source);
   const destinationInfos = [...configInfos, ...metaInfos.filter(x => !configSourceKeys.includes(x.source))];
 
-  return convertDestinationObject(source, destination, destinationInfos, (n, v, dis) => innerMapClass(v, destination[n], dis));
+  return convertObject(source, destination, destinationInfos, (n, v, dis) => innerMapClass(v, destination[n], dis));
 }
 
 export function mapClass<TSource extends object, TDestination extends object>(source: TSource, destination: TDestination, config?: MapConfig): TDestination {
