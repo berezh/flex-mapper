@@ -103,8 +103,7 @@ Parameter is an interface with properties:
 | Name                     |  Type| Description|
 | ------------------------ | ---- |------------ |
 |source| `string`|Source property name|
-|convert|`function` or `string`| In `function` case, parameter is source value the function result is definition value. In `string` case, possible values are: `number`, `string`.
- |
+|convert|`function` or `string`| In `function` case, parameter is source value the function result is definition value. In `string` case, possible values are: `number`, `string`.|
 
 ## @mapConvert decorator
 
