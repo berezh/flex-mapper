@@ -82,7 +82,7 @@ const cat = {
     color: "gray",
     years: 2
 }
-const result = mapClass(cat, CatClass);
+const result = map(cat, CatClass);
 console.info(result);
 // {
 //     nickname: "Tom",
