@@ -15,7 +15,7 @@ npm i flex-mapper
 ```
 
 - [`map` function](#map-function)
-- [`mapClass` function](#mapclass-function)
+- [map class](#map-class)
 - [`mapProperty` decorator](#mapproperty-decorator)
 - [`mapConvert` decorator](#mapconvert-decorator)
 
@@ -47,9 +47,8 @@ console.info(result);
 // }
 ```
 
-## `mapClass` function
+## map class
 
-Maps classes.
 
 Destination class definition. Mapping options are described with decorators: [`@mapProperty`](#mapproperty-decorator) and [`@mapConvert`](#mapconvert-decorator).
 
@@ -74,7 +73,7 @@ class CatClass {
 Mapping class object:
 
 ```ts
-import { mapClass } from 'flex-mapper';
+import { map } from 'flex-mapper';
 
 ...
 
@@ -83,7 +82,7 @@ const cat = {
     color: "gray",
     years: 2
 }
-const result = mapClass(cat, new CatClass());
+const result = mapClass(cat, CatClass);
 console.info(result);
 // {
 //     nickname: "Tom",
@@ -92,7 +91,7 @@ console.info(result);
 // }
 ```
 
-This is important to pass the classes object as a second parameter. In this way `mapClass` method reads decorators defined inside the class.
+This is important to pass the class type as a second parameter. In this way `map` method reads decorators defined inside the class.
 
 ## `mapProperty` decorator
 

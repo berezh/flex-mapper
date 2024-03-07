@@ -1,13 +1,14 @@
-import { mapClass } from "..";
+import { map } from "..";
 import { mapProperty } from "../enumerators/map-property";
+import { ClassType } from "../interfaces";
 
-function testMp<T extends object>(source: any, dest: T, result: T) {
-  const mapResult = mapClass(source, dest);
+function testMp<T extends ClassType<any>>(source: any, dest: T, result: T) {
+  const mapResult = map(source, dest);
   // console.log("result", mapResult);
   expect(mapResult).toEqual(result);
 }
 
-describe("mapClass", () => {
+describe("map class", () => {
   it("simple", () => {
     class TebotClass {
       @mapProperty({})
@@ -25,7 +26,7 @@ describe("mapClass", () => {
         id: 1,
         name: "foo",
       },
-      new TebotClass(),
+      TebotClass,
       dest
     );
   });
@@ -47,7 +48,7 @@ describe("mapClass", () => {
         code: 1,
         firstName: "foo",
       },
-      new DestinationClass(),
+      DestinationClass,
       dest
     );
   });
@@ -69,7 +70,7 @@ describe("mapClass", () => {
         id: "1",
         code: 2,
       },
-      new DestinationClass(),
+      DestinationClass,
       dest
     );
   });
@@ -91,7 +92,7 @@ describe("mapClass", () => {
         id: 1,
         name: "foo",
       },
-      new DestinationClass(),
+      DestinationClass,
       dest
     );
   });

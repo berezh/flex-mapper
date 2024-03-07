@@ -20,3 +20,7 @@ export interface DestinationInfo {
   convert?: MapConvert;
   children?: DestinationInfo[];
 }
+
+export interface ClassType<T = any> extends Function {
+  new (...args: any[]): T;
+}

@@ -1,8 +1,9 @@
 import { MetadataKeys } from "./constants";
 import { numberConverter } from "./converters/number";
 import { stringConverter } from "./converters/string";
-import { MapConvertType, MapConfig, MapPropertyConfig, DestinationInfo } from "./interfaces";
+import { MapConvertType, MapConfig, MapPropertyConfig, DestinationInfo, ClassType } from "./interfaces";
 
+// OBJECT
 function parseSourceConfig(property: string, config: MapPropertyConfig): DestinationInfo {
   const details: DestinationInfo = {
     source: property,
@@ -80,15 +81,7 @@ function innerMap<TSource extends object, TDestination extends object>(source: T
   return convertObject(source, destinationObject, destinationInfos, (n, v, dis) => innerMap(v, dis)) as any;
 }
 
-export function map<TSource extends object, TDestination extends object>(source: TSource, config?: MapConfig): TDestination {
-  if (typeof source === "object" && source !== null) {
-    const configInfos: DestinationInfo[] = parseConfig(config || {});
-    return innerMap(source, configInfos);
-  }
-
-  return source;
-}
-
+// CLASS
 function getMetaDestinationInfos(destination: object): DestinationInfo[] {
   const metadata: { [propertyKey: string]: DestinationInfo } = Reflect.getMetadata(MetadataKeys.MapPropertyDictionary, destination);
   return Object.keys(metadata).map(key => metadata[key]);
@@ -102,7 +95,19 @@ function innerMapClass<TSource extends object, TDestination extends object>(sour
   return convertObject(source, destination, destinationInfos, (n, v, dis) => innerMapClass(v, destination[n], dis));
 }
 
-export function mapClass<TSource extends object, TDestination extends object>(source: TSource, destination: TDestination, config?: MapConfig): TDestination {
-  const configInfos: DestinationInfo[] = parseConfig(config || {});
-  return innerMapClass(source, destination, configInfos);
+export function map<TSource extends object, TDestination extends object>(source: TSource, config?: MapConfig): TDestination;
+export function map<TSource extends object, TDestination extends ClassType<any>>(source: TSource, destinationClass: TDestination, config?: MapConfig): TDestination;
+export function map<TSource extends object>(source: TSource, p2?: any, p3?: MapConfig): any {
+  if (typeof source === "object" && source !== null) {
+    if (typeof p2 === "function") {
+      const destination = new p2();
+      const configInfos: DestinationInfo[] = parseConfig(p3 || {});
+      return innerMapClass(source, destination, configInfos);
+    } else {
+      const configInfos: DestinationInfo[] = parseConfig(p2 || {});
+      return innerMap(source, configInfos);
+    }
+  }
+
+  return source;
 }
