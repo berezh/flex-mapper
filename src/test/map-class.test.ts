@@ -2,7 +2,7 @@ import { map } from "..";
 import { mapProperty } from "../enumerators/map-property";
 import { ClassType } from "../interfaces";
 
-function testMp<T extends ClassType<any>>(source: any, dest: T, result: T) {
+function testMp<T extends object>(source: any, dest: ClassType<T>, result: T) {
   const mapResult = map(source, dest);
   // console.log("result", mapResult);
   expect(mapResult).toEqual(result);
